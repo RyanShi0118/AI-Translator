@@ -4,6 +4,10 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag to create and release (e.g. v1.0.0). Must match manifest.json.'
+        required: true
 
 permissions:
   contents: write
@@ -11,6 +15,8 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
 
@@ -24,17 +30,15 @@ jobs:
       - run: npm run build
 
       - name: Check manifest version matches tag
-        if: startsWith(github.ref, 'refs/tags/')
         run: |
           MANIFEST=$(node -p "require('./dist/manifest.json').version")
-          TAG="${GITHUB_REF_NAME#v}"
-          if [ "$MANIFEST" != "$TAG" ]; then
+          if [ "v$MANIFEST" != "$TAG" ]; then
             echo "manifest.json version ($MANIFEST) does not match tag ($TAG)"; exit 1
           fi
 
       - name: Package extension
         run: |
-          NAME="refine-translate-${GITHUB_REF_NAME}"
+          NAME="refine-translate-${TAG}"
           (cd dist && zip -r "../${NAME}.zip" .)
           echo "ASSET=${NAME}.zip" >> "$GITHUB_ENV"
 
@@ -43,10 +47,13 @@ jobs:
           name: ${{ env.ASSET }}
           path: ${{ env.ASSET }}
 
+      # On manual runs this also creates the tag at the checked-out commit.
       - name: Publish GitHub release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.TAG }}
+          target_commitish: ${{ github.sha }}
+          name: RefineTranslate ${{ env.TAG }}
           files: ${{ env.ASSET }}
           generate_release_notes: true
           body: |
