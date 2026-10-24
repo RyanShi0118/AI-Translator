@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Inherited properties can leak in through the host element (e.g. a page rule
+     like "* { font-family: serif !important }" matches the host itself), so the
+     typography is re-declared on our own root container, which pages can't target. */
+  :host,
+  .rt-root {
+    all: initial;
+    font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC',
+      'Microsoft YaHei', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #0f172a;
+    text-align: left;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    font-style: normal;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+  .rt-root {
+    display: contents;
+  }
+}
+
+@layer components {
+  .rt-btn {
+    @apply inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .rt-select {
+    @apply cursor-pointer rounded-md border border-slate-200 bg-white px-1.5 py-1 text-xs text-slate-700 outline-none hover:border-slate-300 focus:border-brand-500;
+  }
+}

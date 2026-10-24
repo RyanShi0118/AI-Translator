@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "RefineTranslate",
+  "short_name": "RefineTranslate",
+  "version": "1.0.0",
+  "description": "Refine your text first, then translate it idiomatically. Bring your own OpenAI-compatible API key.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "RefineTranslate",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+  "minimum_chrome_version": "116"
+}
