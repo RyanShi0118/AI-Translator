@@ -46,7 +46,9 @@ export type ServerMessage =
 export type RuntimeRequest =
   | { type: 'testConnection'; config: ProviderConfig }
   | { type: 'listModels'; config: Pick<ProviderConfig, 'apiKey' | 'baseUrl'> }
-  | { type: 'openOptions' };
+  | { type: 'openOptions' }
+  /** Popup → content script: the text currently selected on the page. */
+  | { type: 'getSelection' };
 
 export type TestConnectionResult = { ok: true; model: string; latencyMs: number } | { ok: false; error: string };
 

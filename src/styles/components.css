@@ -1,0 +1,9 @@
+/* Shared component classes for the in-page UI (content.css) and extension pages (tailwind.css). */
+@layer components {
+  .rt-btn {
+    @apply inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .rt-select {
+    @apply cursor-pointer rounded-md border border-slate-200 bg-white px-1.5 py-1 text-xs text-slate-700 outline-none hover:border-slate-300 focus:border-brand-500;
+  }
+}

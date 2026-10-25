@@ -11,6 +11,7 @@ Both stages come back in a single streamed completion, separated by `===TRANSLAT
 
 ## Features
 
+- **Popup translator:** click the toolbar icon or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd>, then type or paste text and press <kbd>Ctrl/⌘</kbd>+<kbd>Enter</kbd>. If text is selected on the page, the popup opens pre-filled with it and translates right away. Your last text and result are kept between openings.
 - **Selection popover:** select text on any page, then click the floating icon or press <kbd>Alt</kbd>+<kbd>T</kbd>. A draggable card streams the **Refined Original (原文润色)** and the **Idiomatic Translation (地道译文)**. It has Copy and Replace Selection buttons, a target-language picker, a tone picker and a Regenerate button.
 - **In-place input polish:** while typing in any `<input>`, `<textarea>` or `contenteditable` editor, click the small Lucid button that appears inside the field, or press <kbd>Ctrl/⌘</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> or tap <kbd>Space</kbd> three times quickly. Your text is replaced with the translation, and a small badge offers **Undo**, **View refined** and **Use refined instead**. The native Ctrl+Z undo stack is preserved.
 - **Bring your own key:** works with any OpenAI-compatible API. There are presets for DeepSeek, OpenAI, SiliconFlow, OpenRouter and Custom. Each provider keeps its own key, URL and model, and a **Test Connection** button checks them. **Fetch models** loads the available models from `{Base URL}/models` into a searchable picker. You can still type any model ID by hand.
@@ -23,7 +24,8 @@ src/
   constants/prompt.ts     Static system prompt + delimiter + user-message builder
   background/             Service worker: all LLM fetches (no page CORS/CSP), SSE parsing
   content/                Content script: Shadow DOM host, selection popover, input badge
-  options/, popup/        Settings UI (React + Tailwind)
+  popup/                  Toolbar popup translator (input box → streamed result)
+  options/                Settings page (React + Tailwind)
   shared/                 Settings storage, port protocol types, stream parsing
 ```
 

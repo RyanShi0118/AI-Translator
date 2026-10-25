@@ -163,7 +163,7 @@ export function Popover(p: Props) {
   );
 }
 
-function Section(props: {
+export function Section(props: {
   title: string;
   subtitle: string;
   text: string;
@@ -206,6 +206,6 @@ function Section(props: {
   );
 }
 
-function withCurrent(list: readonly string[], current: string): string[] {
+export function withCurrent(list: readonly string[], current: string): string[] {
   return list.includes(current) ? [...list] : [current, ...list];
 }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { runRefineTranslate, type Job } from '../shared/client';
 import { loadSettings, onSettingsChanged } from '../shared/settings';
-import type { Settings } from '../shared/types';
+import type { RuntimeRequest, Settings } from '../shared/types';
 import { InputFieldButton } from './components/InputFieldButton';
 import { InputJobBadge, type InputJobState } from './components/InputJobBadge';
 import { LogoIcon } from './components/icons';
@@ -255,6 +255,17 @@ export function App({ host }: { host: HTMLElement }) {
       window.removeEventListener('scroll', onScroll, true);
     };
   }, [isFromUs, openPopover, closePopover, startInputJob, cancelInputJob]);
+
+  // The toolbar popup asks for the page selection so it can pre-fill its input.
+  useEffect(() => {
+    const onMessage = (msg: RuntimeRequest, _sender: chrome.runtime.MessageSender, sendResponse: (r: string) => void) => {
+      if (msg.type !== 'getSelection') return false;
+      sendResponse(captureSelection()?.text ?? '');
+      return false;
+    };
+    chrome.runtime.onMessage.addListener(onMessage);
+    return () => chrome.runtime.onMessage.removeListener(onMessage);
+  }, []);
 
   // Cancel in-flight jobs if the content script is torn down.
   useEffect(
