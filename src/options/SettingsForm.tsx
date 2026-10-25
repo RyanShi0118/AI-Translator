@@ -215,6 +215,11 @@ export function SettingsForm({ compact = false }: { compact?: boolean }) {
               onChange={(v) => update({ selectionTrigger: v })}
             />
             <Toggle
+              label="Show a Lucid button inside text fields you're typing in"
+              checked={settings.inputButton}
+              onChange={(v) => update({ inputButton: v })}
+            />
+            <Toggle
               label="Triple-Space inside inputs triggers polish & translate"
               checked={settings.tripleSpaceTrigger}
               onChange={(v) => update({ tripleSpaceTrigger: v })}

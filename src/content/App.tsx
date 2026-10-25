@@ -2,10 +2,21 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { runRefineTranslate, type Job } from '../shared/client';
 import { loadSettings, onSettingsChanged } from '../shared/settings';
 import type { Settings } from '../shared/types';
+import { InputFieldButton } from './components/InputFieldButton';
 import { InputJobBadge, type InputJobState } from './components/InputJobBadge';
 import { LogoIcon } from './components/icons';
 import { Popover, type PopoverState } from './components/Popover';
-import { captureSelection, editableFromEvent, readEditable, replaceSelection, writeEditable, type SelectionSnapshot } from './dom';
+import {
+  captureSelection,
+  contentEditableRoot,
+  editableFromEvent,
+  isTextField,
+  readEditable,
+  replaceSelection,
+  writeEditable,
+  type EditableElement,
+  type SelectionSnapshot,
+} from './dom';
 
 const TRIPLE_SPACE_WINDOW_MS = 600;
 const MAX_SOURCE_CHARS = 12_000;
@@ -24,6 +35,8 @@ export function App({ host }: { host: HTMLElement }) {
   const [trigger, setTrigger] = useState<{ x: number; y: number; snap: SelectionSnapshot } | null>(null);
   const [popover, setPopover] = useState<PopoverSession | null>(null);
   const [inputJob, setInputJob] = useState<InputJobState | null>(null);
+  /** The text field the user is typing in, and whether it has any text yet. */
+  const [focused, setFocused] = useState<{ el: EditableElement; hasText: boolean } | null>(null);
 
   const popoverJob = useRef<Job | null>(null);
   const inputJobRef = useRef<Job | null>(null);
@@ -194,11 +207,48 @@ export function App({ host }: { host: HTMLElement }) {
 
     const onScroll = () => setTrigger(null);
 
+    // Track the focused text field so we can show the in-field button.
+    const onFocusIn = (e: FocusEvent) => {
+      if (isFromUs(e)) return;
+      const el = editableFromEvent(e);
+      setFocused(el ? { el, hasText: !!readEditable(el).trim() } : null);
+    };
+    const onFocusOut = (e: FocusEvent) => {
+      if (isFromUs(e)) return;
+      // Wait for focus to settle; focus may simply move within the same editor.
+      setTimeout(() => {
+        setFocused((prev) => {
+          if (!prev) return prev;
+          let active = document.activeElement;
+          while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+          return active && (active === prev.el || prev.el.contains(active)) ? prev : null;
+        });
+      }, 0);
+    };
+    const onInput = (e: Event) => {
+      if (isFromUs(e)) return;
+      const el = editableFromEvent(e);
+      if (!el) return;
+      const hasText = !!readEditable(el).trim();
+      setFocused((prev) => (prev?.el === el && prev.hasText === hasText ? prev : { el, hasText }));
+    };
+
     document.addEventListener('mouseup', onMouseUp, true);
     document.addEventListener('mousedown', onMouseDown, true);
     window.addEventListener('keydown', onKeyDown, true);
     window.addEventListener('scroll', onScroll, true);
+    document.addEventListener('focusin', onFocusIn, true);
+    // A field may already be focused (e.g. autofocus) before we mounted.
+    let initial = document.activeElement;
+    while (initial?.shadowRoot?.activeElement) initial = initial.shadowRoot.activeElement;
+    const initialField = isTextField(initial) ? initial : contentEditableRoot(initial);
+    if (initialField) setFocused({ el: initialField, hasText: !!readEditable(initialField).trim() });
+    document.addEventListener('focusout', onFocusOut, true);
+    document.addEventListener('input', onInput, true);
     return () => {
+      document.removeEventListener('focusin', onFocusIn, true);
+      document.removeEventListener('focusout', onFocusOut, true);
+      document.removeEventListener('input', onInput, true);
       document.removeEventListener('mouseup', onMouseUp, true);
       document.removeEventListener('mousedown', onMouseDown, true);
       window.removeEventListener('keydown', onKeyDown, true);
@@ -244,6 +294,10 @@ export function App({ host }: { host: HTMLElement }) {
           onReplace={() => replaceSelection(popover.snap, popover.state.translation)}
           onClose={closePopover}
         />
+      )}
+
+      {settings?.inputButton && focused?.hasText && focused.el.isConnected && inputJob?.el !== focused.el && (
+        <InputFieldButton el={focused.el} onTrigger={() => startInputJob(focused.el)} />
       )}
 
       {inputJob && <InputJobBadge job={inputJob} onCancel={cancelInputJob} onApply={applyInputVersion} onDismiss={dismissInputJob} />}

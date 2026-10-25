@@ -21,7 +21,7 @@ createRoot(document.getElementById('root')!).render(
             Select text on any page, then click the floating icon or press <kbd>Alt</kbd> + <kbd>T</kbd>.
           </li>
           <li>
-            In any input, textarea or rich-text editor, press <kbd>Ctrl/⌘</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd>, or tap{' '}
+            While typing in any input, textarea or rich-text editor, click the Lucid button that appears inside the field, or press <kbd>Ctrl/⌘</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd>, or tap{' '}
             <kbd>Space</kbd> three times quickly, to polish &amp; translate what you typed in place.
           </li>
         </ul>

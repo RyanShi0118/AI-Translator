@@ -25,7 +25,7 @@ interface Props {
 }
 
 /** Tracks the element's on-screen rect so the badge follows scrolling/resizing. */
-function useElementRect(el: Element) {
+export function useElementRect(el: Element) {
   const [rect, setRect] = useState(() => el.getBoundingClientRect());
   useEffect(() => {
     let frame = 0;

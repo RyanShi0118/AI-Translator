@@ -12,7 +12,7 @@ Both stages come back in a single streamed completion, separated by `===TRANSLAT
 ## Features
 
 - **Selection popover:** select text on any page, then click the floating icon or press <kbd>Alt</kbd>+<kbd>T</kbd>. A draggable card streams the **Refined Original (原文润色)** and the **Idiomatic Translation (地道译文)**. It has Copy and Replace Selection buttons, a target-language picker, a tone picker and a Regenerate button.
-- **In-place input polish:** in any `<input>`, `<textarea>` or `contenteditable` editor, press <kbd>Ctrl/⌘</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> or tap <kbd>Space</kbd> three times quickly. Your text is replaced with the translation, and a small badge offers **Undo**, **View refined** and **Use refined instead**. The native Ctrl+Z undo stack is preserved.
+- **In-place input polish:** while typing in any `<input>`, `<textarea>` or `contenteditable` editor, click the small Lucid button that appears inside the field, or press <kbd>Ctrl/⌘</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> or tap <kbd>Space</kbd> three times quickly. Your text is replaced with the translation, and a small badge offers **Undo**, **View refined** and **Use refined instead**. The native Ctrl+Z undo stack is preserved.
 - **Bring your own key:** works with any OpenAI-compatible API. There are presets for DeepSeek, OpenAI, SiliconFlow, OpenRouter and Custom. Each provider keeps its own key, URL and model, and a **Test Connection** button checks them. **Fetch models** loads the available models from `{Base URL}/models` into a searchable picker. You can still type any model ID by hand.
 - **Isolated UI:** everything on the page renders in a Shadow DOM, so page CSS can't break the extension and its Tailwind styles never leak into the page.
 

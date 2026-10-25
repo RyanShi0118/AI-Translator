@@ -17,7 +17,7 @@ createRoot(document.getElementById('root')!).render(
       </header>
       <SettingsForm compact />
       <p className="mt-3 text-center text-xs text-slate-500">
-        Select text → <kbd>Alt+T</kbd> · In inputs → <kbd>Ctrl/⌘+Shift+F</kbd> or Space×3
+        Select text → <kbd>Alt+T</kbd> · In inputs → click the in-field button, <kbd>Ctrl/⌘+Shift+F</kbd> or Space×3
       </p>
     </main>
   </StrictMode>,

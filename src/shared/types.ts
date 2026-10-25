@@ -15,6 +15,8 @@ export interface Settings {
   temperature: number;
   /** Show the floating trigger icon after selecting text. */
   selectionTrigger: boolean;
+  /** Show a Lucid button inside the focused text field once it contains text. */
+  inputButton: boolean;
   /** Press Space three times quickly inside an input to trigger polish & translate. */
   tripleSpaceTrigger: boolean;
 }

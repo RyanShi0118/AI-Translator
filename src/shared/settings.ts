@@ -17,6 +17,7 @@ export function createDefaultSettings(): Settings {
     defaultTone: 'Professional',
     temperature: 0.3,
     selectionTrigger: true,
+    inputButton: true,
     tripleSpaceTrigger: true,
   };
 }
