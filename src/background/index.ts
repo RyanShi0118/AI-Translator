@@ -2,7 +2,7 @@ import { PORT_NAME } from '../shared/constants';
 import { activeProvider, loadSettings } from '../shared/settings';
 import { splitOutput } from '../shared/stream';
 import type { ClientMessage, RuntimeRequest, ServerMessage } from '../shared/types';
-import { streamRefineTranslate, testConnection } from './llm';
+import { listModels, streamRefineTranslate, testConnection } from './llm';
 
 /**
  * Every LLM request runs here, in the service worker, so it is not subject to
@@ -73,6 +73,10 @@ chrome.runtime.onMessage.addListener((msg: RuntimeRequest, _sender, sendResponse
   if (msg.type === 'testConnection') {
     testConnection(msg.config).then(sendResponse);
     return true; // async response
+  }
+  if (msg.type === 'listModels') {
+    listModels(msg.config).then(sendResponse);
+    return true;
   }
   if (msg.type === 'openOptions') {
     chrome.runtime.openOptionsPage();

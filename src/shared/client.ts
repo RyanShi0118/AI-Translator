@@ -19,7 +19,7 @@ export function runRefineTranslate(req: Omit<StartMessage, 'type'>, handlers: Jo
     port = chrome.runtime.connect({ name: PORT_NAME });
   } catch {
     // Happens when the extension was reloaded/updated while this page stayed open.
-    queueMicrotask(() => handlers.onError?.('RefineTranslate was updated. Please reload this page.'));
+    queueMicrotask(() => handlers.onError?.('Lucid was updated. Please reload this page.'));
     return { cancel() {} };
   }
 

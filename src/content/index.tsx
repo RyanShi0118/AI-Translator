@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client';
 import styles from './content.css?inline';
 import { App } from './App';
 
-const HOST_TAG = 'refine-translate-root';
+const HOST_TAG = 'lucid-translate-root';
 
 function mount() {
   // Guard against double injection (e.g. extension reload + manual re-inject).

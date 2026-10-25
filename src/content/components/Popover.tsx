@@ -72,7 +72,7 @@ export function Popover(p: Props) {
     <div
       ref={cardRef}
       role="dialog"
-      aria-label="RefineTranslate"
+      aria-label="Lucid"
       className="fixed flex animate-rt-fade-in flex-col overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-2xl"
       style={{ left: pos.x, top: pos.y, width: `min(${WIDTH}px, calc(100vw - ${MARGIN * 2}px))`, maxHeight: 'min(560px, calc(100vh - 24px))' }}
     >

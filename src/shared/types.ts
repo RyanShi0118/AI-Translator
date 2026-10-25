@@ -43,6 +43,9 @@ export type ServerMessage =
 /** One-shot runtime messages (chrome.runtime.sendMessage). */
 export type RuntimeRequest =
   | { type: 'testConnection'; config: ProviderConfig }
+  | { type: 'listModels'; config: Pick<ProviderConfig, 'apiKey' | 'baseUrl'> }
   | { type: 'openOptions' };
 
 export type TestConnectionResult = { ok: true; model: string; latencyMs: number } | { ok: false; error: string };
+
+export type ListModelsResult = { ok: true; models: string[] } | { ok: false; error: string };

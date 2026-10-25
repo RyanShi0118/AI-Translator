@@ -71,4 +71,4 @@ export const PROVIDER_PRESETS: ProviderPreset[] = [
   },
 ];
 
-export const PORT_NAME = 'refine-translate-stream';
+export const PORT_NAME = 'lucid-stream';

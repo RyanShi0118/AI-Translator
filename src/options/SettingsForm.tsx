@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { LANGUAGES, PROVIDER_PRESETS, TONES, type ProviderId } from '../shared/constants';
 import { createDefaultSettings, loadSettings, normalizeBaseUrl, saveSettings } from '../shared/settings';
+import { ModelPicker } from './ModelPicker';
 import type { ProviderConfig, RuntimeRequest, Settings, TestConnectionResult } from '../shared/types';
 
 type Toast = { kind: 'success' | 'error' | 'info'; text: string } | null;
@@ -153,12 +154,15 @@ export function SettingsForm({ compact = false }: { compact?: boolean }) {
             <label className={labelCls} htmlFor="rt-model">
               Model ID
             </label>
-            <input
+            <ModelPicker
               id="rt-model"
-              className={inputCls + ' font-mono'}
+              inputClassName={inputCls}
               placeholder={preset.model || 'model-name'}
               value={provider.model}
-              onChange={(e) => updateProvider({ model: e.target.value })}
+              apiKey={provider.apiKey}
+              baseUrl={provider.baseUrl}
+              onChange={(model) => updateProvider({ model })}
+              onNotify={(kind, text) => notify({ kind, text }, kind === 'error' ? 8000 : 2500)}
             />
           </div>
         </div>

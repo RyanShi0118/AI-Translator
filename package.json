@@ -1,7 +1,7 @@
 {
-  "name": "refine-translate",
+  "name": "lucid-translate",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Two-stage refine-then-translate browser extension (Manifest V3).",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "build": "npm run typecheck && vite build && vite build -c vite.content.config.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "zip": "npm run build && cd dist && zip -r ../refine-translate.zip ."
+    "zip": "npm run build && cd dist && zip -r ../lucid.zip ."
   },
   "dependencies": {
     "react": "18.3.1",

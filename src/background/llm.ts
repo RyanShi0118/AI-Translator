@@ -1,14 +1,14 @@
 import { SYSTEM_PROMPT, buildUserMessage } from '../constants/prompt';
 import { normalizeBaseUrl } from '../shared/settings';
 import { createSSEParser, extractDelta } from '../shared/stream';
-import type { ProviderConfig, TestConnectionResult } from '../shared/types';
+import type { ListModelsResult, ProviderConfig, TestConnectionResult } from '../shared/types';
 
 export class LLMError extends Error {}
 
 function assertConfigured(config: ProviderConfig) {
-  if (!config.apiKey) throw new LLMError('API key is not set. Open RefineTranslate settings to add one.');
-  if (!config.baseUrl) throw new LLMError('Base URL is not set. Open RefineTranslate settings to add one.');
-  if (!config.model) throw new LLMError('Model is not set. Open RefineTranslate settings to add one.');
+  if (!config.apiKey) throw new LLMError('API key is not set. Open Lucid settings to add one.');
+  if (!config.baseUrl) throw new LLMError('Base URL is not set. Open Lucid settings to add one.');
+  if (!config.model) throw new LLMError('Model is not set. Open Lucid settings to add one.');
 }
 
 function endpoint(config: ProviderConfig) {
@@ -21,7 +21,7 @@ function headers(config: ProviderConfig): HeadersInit {
     Authorization: `Bearer ${config.apiKey.trim()}`,
     // Optional attribution headers used by OpenRouter; ignored by other providers.
     'HTTP-Referer': 'https://github.com/RyanShi0118/AI-Translator',
-    'X-Title': 'RefineTranslate',
+    'X-Title': 'Lucid',
   };
 }
 
@@ -134,4 +134,40 @@ export async function testConnection(config: ProviderConfig): Promise<TestConnec
     const err = e as Error;
     return { ok: false, error: err.name === 'AbortError' ? 'Request timed out after 20s.' : err.message };
   }
+}
+
+/**
+ * Lists the models available to this key via the OpenAI-compatible
+ * `GET {baseUrl}/models` endpoint (supported by DeepSeek, OpenAI,
+ * SiliconFlow, OpenRouter, Ollama, LM Studio, vLLM, …).
+ */
+export async function listModels(config: Pick<ProviderConfig, 'apiKey' | 'baseUrl'>): Promise<ListModelsResult> {
+  if (!config.baseUrl) return { ok: false, error: 'Enter a Base URL first.' };
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20_000);
+  try {
+    const hdrs: Record<string, string> = {};
+    // Local servers often need no key; only send the header when one is set.
+    if (config.apiKey.trim()) hdrs.Authorization = `Bearer ${config.apiKey.trim()}`;
+    const res = await fetch(`${normalizeBaseUrl(config.baseUrl)}/models`, { headers: hdrs, signal: controller.signal });
+    if (!res.ok) return { ok: false, error: await readError(res) };
+    const models = parseModelList(await res.json().catch(() => null));
+    if (!models.length) return { ok: false, error: 'The provider returned no models.' };
+    return { ok: true, models };
+  } catch (e) {
+    const err = e as Error;
+    return { ok: false, error: err.name === 'AbortError' ? 'Request timed out after 20s.' : `Network error: ${err.message}` };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** Accepts `{ data: [{ id }] }` (OpenAI), `{ models: [...] }` or a bare array; returns sorted unique IDs. */
+export function parseModelList(json: unknown): string[] {
+  const obj = json as { data?: unknown; models?: unknown } | null;
+  const list = Array.isArray(json) ? json : Array.isArray(obj?.data) ? obj!.data : Array.isArray(obj?.models) ? obj!.models : [];
+  const ids = (list as unknown[])
+    .map((m) => (typeof m === 'string' ? m : (m as { id?: unknown; name?: unknown })?.id ?? (m as { name?: unknown })?.name))
+    .filter((id): id is string => typeof id === 'string' && id.length > 0);
+  return [...new Set(ids)].sort((a, b) => a.localeCompare(b));
 }

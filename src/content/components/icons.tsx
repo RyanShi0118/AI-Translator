@@ -1,10 +1,14 @@
 type P = { className?: string };
 const base = { fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
 
+/** Prism: raw text in, refined + translated spectrum out. Matches the extension icon. */
 export const LogoIcon = ({ className }: P) => (
-  <svg viewBox="0 0 24 24" className={className} {...base}>
-    <path d="M4 5h8M8 3v2M5.5 5c.8 3 3 5.5 6 7M10.5 5c-.6 3.5-3 6.5-6.5 8" />
-    <path d="M13 21l4-9 4 9M14.5 18h5" />
+  <svg viewBox="0 0 24 24" className={className} fill="none" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 14.5l7-2.5" stroke="currentColor" strokeWidth="2" />
+    <path d="M14.5 10.5l7.5-3.5" stroke="#f59e0b" strokeWidth="2" />
+    <path d="M15 12.5l7-.5" stroke="#10b981" strokeWidth="2" />
+    <path d="M15 14.5l7 2" stroke="#0ea5e9" strokeWidth="2" />
+    <path d="M12 4l6 13H6z" stroke="currentColor" strokeWidth="2" fill="#fff" />
   </svg>
 );
 export const CopyIcon = ({ className }: P) => (

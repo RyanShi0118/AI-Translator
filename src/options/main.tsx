@@ -9,8 +9,8 @@ createRoot(document.getElementById('root')!).render(
       <header className="mb-6 flex items-center gap-3">
         <img src="/icons/icon-48.png" alt="" className="h-10 w-10" />
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">RefineTranslate</h1>
-          <p className="text-sm text-slate-500">Refine your text first, then translate it idiomatically.</p>
+          <h1 className="text-2xl font-semibold text-slate-900">Lucid</h1>
+          <p className="text-sm text-slate-500">Polish your writing first, then translate it idiomatically.</p>
         </div>
       </header>
       <SettingsForm />

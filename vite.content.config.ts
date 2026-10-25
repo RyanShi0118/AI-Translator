@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     target: 'es2020',
     lib: {
       entry: resolve(root, 'src/content/index.tsx'),
-      name: 'RefineTranslateContent',
+      name: 'LucidContent',
       formats: ['iife'],
       fileName: () => 'content.js',
     },

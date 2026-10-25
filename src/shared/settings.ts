@@ -57,3 +57,19 @@ export function onSettingsChanged(cb: (s: Settings) => void): () => void {
 export function activeProvider(settings: Settings): ProviderConfig {
   return settings.providers[settings.provider];
 }
+
+const MODEL_CACHE_KEY = 'modelCache';
+
+/** Model lists are cached per Base URL so the picker works instantly on reopen. */
+export async function loadCachedModels(baseUrl: string): Promise<string[]> {
+  const data = await chrome.storage.local.get(MODEL_CACHE_KEY);
+  const cache = (data[MODEL_CACHE_KEY] ?? {}) as Record<string, string[]>;
+  return cache[normalizeBaseUrl(baseUrl)] ?? [];
+}
+
+export async function saveCachedModels(baseUrl: string, models: string[]): Promise<void> {
+  const data = await chrome.storage.local.get(MODEL_CACHE_KEY);
+  const cache = (data[MODEL_CACHE_KEY] ?? {}) as Record<string, string[]>;
+  cache[normalizeBaseUrl(baseUrl)] = models;
+  await chrome.storage.local.set({ [MODEL_CACHE_KEY]: cache });
+}

@@ -81,7 +81,7 @@ export function App({ host }: { host: HTMLElement }) {
     const id = Date.now();
     const base: InputJobState = { id, el, original, status: 'running', stage: 'refining', refined: '', translation: '', applied: 'original' };
     if (!text.trim()) {
-      setInputJob({ ...base, status: 'error', error: 'Type something first, then trigger RefineTranslate.' });
+      setInputJob({ ...base, status: 'error', error: 'Type something first, then trigger Lucid.' });
       return;
     }
     setInputJob(base);
